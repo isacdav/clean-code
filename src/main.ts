@@ -1,4 +1,5 @@
 import './style.css';
+import './solid/srp';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
