@@ -1,60 +1,64 @@
+// Interfaces
+interface Car {
+  getNumberOfSeats: () => number;
+}
+
 // Classes
-class Tesla {
+class Tesla implements Car {
   constructor(private numberOfSeats: number) {}
 
-  getNumberOfTeslaSeats() {
+  getNumberOfSeats() {
     return this.numberOfSeats;
   }
 }
 
-class Audi {
+class Audi implements Car {
   constructor(private numberOfSeats: number) {}
 
-  getNumberOfAudiSeats() {
+  getNumberOfSeats() {
     return this.numberOfSeats;
   }
 }
 
-class Toyota {
+class Toyota implements Car {
   constructor(private numberOfSeats: number) {}
 
-  getNumberOfToyotaSeats() {
+  getNumberOfSeats() {
     return this.numberOfSeats;
   }
 }
 
-class Honda {
+class Honda implements Car {
   constructor(private numberOfSeats: number) {}
 
-  getNumberOfHondaSeats() {
+  getNumberOfSeats() {
+    return this.numberOfSeats;
+  }
+}
+
+class Ford implements Car {
+  constructor(private numberOfSeats: number) {}
+
+  getNumberOfSeats() {
     return this.numberOfSeats;
   }
 }
 
 // Implement
 (() => {
-  const printCarSeats = (cars: (Tesla | Audi | Toyota | Honda)[]) => {
-    for (const car of cars) {
-      if (car instanceof Tesla) {
-        console.log('Tesla', car.getNumberOfTeslaSeats());
-        continue;
-      }
-      if (car instanceof Audi) {
-        console.log('Audi', car.getNumberOfAudiSeats());
-        continue;
-      }
-      if (car instanceof Toyota) {
-        console.log('Toyota', car.getNumberOfToyotaSeats());
-        continue;
-      }
-      if (car instanceof Honda) {
-        console.log('Honda', car.getNumberOfHondaSeats());
-        continue;
-      }
-    }
+  const printCarSeats = (cars: Car[]) => {
+    cars.forEach(car => {
+      console.log(car.constructor.name, car.getNumberOfSeats());
+    });
   };
 
-  const cars = [new Tesla(7), new Audi(2), new Toyota(5), new Honda(5)];
+  const cars = [
+    new Tesla(7),
+    new Audi(2),
+    new Toyota(5),
+    new Honda(5),
+    new Ford(6),
+  ];
 
   printCarSeats(cars);
 })();
