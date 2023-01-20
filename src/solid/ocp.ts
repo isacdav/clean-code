@@ -1,9 +1,25 @@
-import axios from 'axios';
+// import axios from 'axios';
 
 // Classes
+class HttpClient {
+  // async get(url: string) {
+  //   const { data, status } = await axios.get(url);
+  //   return { data, status };
+  // }
+
+  async get(url: string) {
+    const resp = await fetch(url);
+    const data = resp.json();
+
+    return { data, status: resp.status };
+  }
+}
+
 class TodoService {
+  constructor(private httpClient: HttpClient) {}
+
   async getTodoItems() {
-    const { data } = await axios.get(
+    const { data } = await this.httpClient.get(
       'https://jsonplaceholder.typicode.com/todos/'
     );
     return data;
@@ -11,8 +27,10 @@ class TodoService {
 }
 
 class PostService {
+  constructor(private httpClient: HttpClient) {}
+
   async getPosts() {
-    const { data } = await axios.get(
+    const { data } = await this.httpClient.get(
       'https://jsonplaceholder.typicode.com/posts'
     );
     return data;
@@ -20,8 +38,10 @@ class PostService {
 }
 
 class PhotosService {
+  constructor(private httpClient: HttpClient) {}
+
   async getPhotos() {
-    const { data } = await axios.get(
+    const { data } = await this.httpClient.get(
       'https://jsonplaceholder.typicode.com/photos'
     );
     return data;
@@ -30,9 +50,11 @@ class PhotosService {
 
 // Implement
 (async () => {
-  const todoService = new TodoService();
-  const postService = new PostService();
-  const photosService = new PhotosService();
+  const httpClient = new HttpClient();
+
+  const todoService = new TodoService(httpClient);
+  const postService = new PostService(httpClient);
+  const photosService = new PhotosService(httpClient);
 
   const todos = await todoService.getTodoItems();
   const posts = await postService.getPosts();
