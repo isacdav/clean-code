@@ -1,3 +1,7 @@
+/*
+ * Single resposability principle
+ */
+
 (() => {
   // Interfaces
   interface Product {

@@ -1,3 +1,7 @@
+/*
+ * Liskov substitution principle
+ */
+
 // Interfaces
 interface Car {
   getNumberOfSeats: () => number;

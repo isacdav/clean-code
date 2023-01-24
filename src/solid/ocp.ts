@@ -1,5 +1,8 @@
-// import axios from 'axios';
+/*
+ * Open close principle
+ */
 
+// import axios from 'axios';
 // Classes
 class HttpClient {
   // async get(url: string) {
