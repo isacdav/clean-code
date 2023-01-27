@@ -1,5 +1,6 @@
 import './style.css';
-import './solid/dip';
+
+// NOTE: import here the file to run
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
