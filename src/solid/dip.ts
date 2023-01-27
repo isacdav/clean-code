@@ -2,6 +2,9 @@
  * Dependency inversion principle
  */
 
+import jsonNews from '../data/data.json';
+import { localData } from '../data/local';
+
 // Interfaces
 interface New {
   body: string;
@@ -10,24 +13,27 @@ interface New {
   userId: number;
 }
 
-// Data service
-class LocalDataBaseService {
-  async getFakeNews() {
-    return [
-      {
-        userId: 1,
-        id: 1,
-        title:
-          'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
-        body: 'quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae ut ut quas totam nostrum rerum est autem sunt rem eveniet architecto',
-      },
-      {
-        userId: 1,
-        id: 2,
-        title: 'qui est esse',
-        body: 'est rerum tempore vitae sequi sint nihil reprehenderit dolor beatae ea dolores neque fugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis qui aperiam non debitis possimus qui neque nisi nulla',
-      },
-    ];
+interface NewsDataProvider {
+  getNews: () => Promise<New[]>;
+}
+
+// Data services
+class LocalDBService implements NewsDataProvider {
+  async getNews() {
+    return localData;
+  }
+}
+
+class JsonDBService implements NewsDataProvider {
+  async getNews() {
+    return jsonNews;
+  }
+}
+
+class RemoteDBService implements NewsDataProvider {
+  async getNews() {
+    const resp = await fetch('https://jsonplaceholder.typicode.com/posts');
+    return resp.json();
   }
 }
 
@@ -35,21 +41,26 @@ class LocalDataBaseService {
 class NewsService {
   private news: New[] = [];
 
-  constructor() {}
+  constructor(private dataProvider: NewsDataProvider) {}
 
   async getNews() {
-    const jsonDB = new LocalDataBaseService();
-    this.news = await jsonDB.getFakeNews();
-
-    return this.news;
+    return this.dataProvider.getNews();
   }
 }
 
 // Implement
 (async () => {
-  const newsServices = new NewsService();
+  const dataProviderLocal = new LocalDBService();
+  const dataProviderJson = new JsonDBService();
+  const dataProviderRemote = new RemoteDBService();
 
-  const news = await newsServices.getNews();
+  const newsServiceLocal = new NewsService(dataProviderLocal);
+  const newsServiceJson = new NewsService(dataProviderJson);
+  const newsServiceRemote = new NewsService(dataProviderRemote);
 
-  console.log({ news });
+  const newsLocal = await newsServiceLocal.getNews();
+  const newsJson = await newsServiceJson.getNews();
+  const newsRemote = await newsServiceRemote.getNews();
+
+  console.log({ newsLocal, newsJson, newsRemote });
 })();
